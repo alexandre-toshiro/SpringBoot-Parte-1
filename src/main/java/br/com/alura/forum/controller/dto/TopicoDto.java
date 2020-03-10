@@ -14,7 +14,7 @@ import br.com.alura.forum.model.Topico;
  * Através das DTO's nós blindamos a aplicação desse tipo de falha, entre outras.
  * */
 
-
+// DTO E FORM - Dto são objetos que mandam informações da API para o cliente.
 
 public class TopicoDto {
 

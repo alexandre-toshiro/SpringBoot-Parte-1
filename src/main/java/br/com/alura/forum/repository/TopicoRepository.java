@@ -7,8 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import br.com.alura.forum.model.Topico;
 /*
  * Esta interface irá herdar de JpaRe, que já possui as operações básicas de CRUD, onde não será mais necessário
- * criar um DAO para cada controle. Esta interface ficará vazia, pois o métodos que utilizaremos virão todos da classe extendida.
- * 
+ * criar um DAO completo para cada entidade. Esta interface ficará vazia, pois o métodos que utilizaremos virão todos da classe extendida.
+ * Eventuais assinaturas podem ser implementados aqui para buscas específicas.
+ * De forma geral é feito um repository para cada entidade, porém é possível fazer um genérico, que na
+ * grande maioria dos casos não será viável.
  * */
 public interface TopicoRepository extends JpaRepository<Topico, Long>{
 								//<Entidade que vai trabalhar, tipo da chave primária da entidade>

@@ -1,5 +1,10 @@
 package br.com.alura.forum.controller.form;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
 import br.com.alura.forum.model.Curso;
 import br.com.alura.forum.model.Topico;
 import br.com.alura.forum.repository.CursoRepository;
@@ -7,8 +12,20 @@ import br.com.alura.forum.repository.CursoRepository;
 // DTO E FORM - Form são dados que chegam do cliente para a API.
 public class TopicoForm {
 
+	// Validação Bean do Spring. Colocar no Controller o @valid
+
+	@NotNull // Campo não pode ser nulo
+	@NotEmpty // não pode ser vazio
+	@Length(min = 5) // Mínimo de 5 caracteres
 	private String titulo;
+
+	@NotNull
+	@NotEmpty
+	@Length(min = 10)
 	private String mensagem;
+
+	@NotNull
+	@NotEmpty
 	private String nomeCurso;
 
 	public String getTitulo() {

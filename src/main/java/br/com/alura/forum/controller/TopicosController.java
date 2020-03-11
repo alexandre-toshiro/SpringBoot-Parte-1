@@ -2,6 +2,7 @@ package br.com.alura.forum.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -60,7 +61,7 @@ public class TopicosController {
 	}
 
 	@GetMapping("/{id}") // Específica o parâmetro que este método irá receber na URL
-	public DetalhesDoTopicoDto detalhar(@PathVariable Long id) {
+	public ResponseEntity<DetalhesDoTopicoDto> detalhar(@PathVariable Long id) {
 		/*
 		 * Por padrão o SPRING irá olhar o nome do parâmetro do método e da URL, caso
 		 * tenham o mesmo nome já irá associa-los automaticamente. (@PathVariable("id")
@@ -68,27 +69,42 @@ public class TopicosController {
 		 * listar apenas um Tópico.
 		 */
 
-		Topico topico = topicoRepository.getOne(id); // repository irá buscar no banco, um por id.
-		return new DetalhesDoTopicoDto(topico);
+		Optional<Topico> topico = topicoRepository.findById(id); // repository irá buscar no banco, um por id.
+		if (topico.isPresent()) {
+			return ResponseEntity.ok(new DetalhesDoTopicoDto(topico.get()));
+		}
+
+		return ResponseEntity.notFound().build();
 
 	}
 
 	@PutMapping("/{id}")
-	@Transactional// avisa o spring para dispara o update no banco de dados, sem ela não é atualizado.
+	@Transactional // avisa o spring para dispara o update no banco de dados, sem ela não é
+					// atualizado.
 	public ResponseEntity<TopicoDto> atualizar(@PathVariable Long id, @RequestBody @Valid AtualizacaoTopicoForm form) {
 
-		Topico topico = form.atualizar(id, topicoRepository);
+		Optional<Topico> optional = topicoRepository.findById(id);
+		if (optional.isPresent()) {
+			Topico topico = form.atualizar(id, topicoRepository);
+			return ResponseEntity.ok(new TopicoDto(topico));
+			// O parâmetro do "ok" é o corpo que será devolvido como resposta pelo servidor.
+		}
 
-		return ResponseEntity.ok(new TopicoDto(topico));
-		// O parâmetro do "ok" é o corpo que será devolvido como resposta pelo servidor.
+		return ResponseEntity.notFound().build();
 
 	}
-	
+
 	@DeleteMapping("/{id}")
 	@Transactional
-	public ResponseEntity<?> remover(@PathVariable Long id){
-		topicoRepository.deleteById(id);
-		return ResponseEntity.ok().build();
-		
+	public ResponseEntity<?> remover(@PathVariable Long id) {
+
+		Optional<Topico> optional = topicoRepository.findById(id);
+		if (optional.isPresent()) {
+			topicoRepository.deleteById(id);
+			return ResponseEntity.ok().build();
+		}
+
+		return ResponseEntity.notFound().build();
+
 	}
 }

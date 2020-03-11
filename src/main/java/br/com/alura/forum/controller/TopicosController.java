@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +48,7 @@ public class TopicosController {
 	}
 
 	@PostMapping // @rebody Indica que é pra pegar do corpo da req e não do parâmetro de URL.
+	@Transactional
 	public ResponseEntity<TopicoDto> cadastrar(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriBuilder) {
 		// Devolvemos um topicodto na corpo da resposta, que vai representar o conteúdo
 		// criado.
@@ -80,5 +82,13 @@ public class TopicosController {
 		return ResponseEntity.ok(new TopicoDto(topico));
 		// O parâmetro do "ok" é o corpo que será devolvido como resposta pelo servidor.
 
+	}
+	
+	@DeleteMapping("/{id}")
+	@Transactional
+	public ResponseEntity<?> remover(@PathVariable Long id){
+		topicoRepository.deleteById(id);
+		return ResponseEntity.ok().build();
+		
 	}
 }
